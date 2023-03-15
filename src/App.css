@@ -38,6 +38,14 @@ li{
 }
 
 li:hover{
-  background-color: #ccc342;
+  background-color: #ffa07a;
   cursor: pointer
+}
+
+.loader-placeholder{
+  height: 55px;
+}
+
+.highlight{
+  color: #ccc;
 }
