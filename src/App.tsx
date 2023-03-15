@@ -1,14 +1,16 @@
 
 import { useEffect, useId, useState } from 'react'
-import { findDifference } from './utilities/utils'
+import { findDifference, throttle } from './utilities/utils'
 import { query } from './service/searchQuery'
 import './App.css'
+
+
 
 function App() {
   const [ searchText, setSearchText ] = useState<string>('')
   const [ suggestions, setSuggestions ] = useState<Array<any>>([])
-  const [ loading, setLoading ] = useState<boolean>(false)
-  const listID = useId()
+  const [ loading, setLoading ] = useState<boolean>(false) 
+  const listID = useId() // to generate unique IDs as keys for the list
 
   const searchQuery = async (arg:string) =>{
     setLoading(true)
@@ -16,6 +18,10 @@ function App() {
     setSuggestions(data)
     setLoading(false)
   }
+
+  const updateSearchText = throttle((text:string) => {
+    return setSearchText(text)
+  }, 2000) // The throttle function will wait for 2 seconds intervals before making call to the API. This will both improve performace and since I am using a free API, i can only make one request per second
 
   useEffect(()=>{
     if(searchText.length > 0){
@@ -26,6 +32,7 @@ function App() {
     
   return (
     <div className="App">
+       {/* This is for a mini loader on top of the input box to show when a request is in progress */}
           { !!loading ? 
             <svg version="1.1"  width="50" height="50" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 100 100" enable-background="new 0 0 0 0" xmlSpace="preserve">
@@ -50,7 +57,7 @@ function App() {
           type="text" 
           name='searchText' 
           id='searchText'
-          onChange={(event)=>setSearchText(event.target.value)}
+          onChange={(event)=>updateSearchText(event.target.value)}
           />
      </div>
 
@@ -59,7 +66,7 @@ function App() {
         (!!searchText && suggestions?.length > 0) ? 
         <ul>
           { suggestions.map((el:any)=>{
-            return <li key={el.query + listID} ><span className='highlight' >{searchText}</span>{findDifference(el.query, searchText)}</li>
+            return <li key={el.query + listID} ><span className='highlight' >{searchText}</span>{findDifference(el.query, searchText)}</li> // this findDifference function checks for the difference in the suggestion and the search text
           }
           ) }
         </ul> : null

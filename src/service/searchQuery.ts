@@ -11,9 +11,7 @@ export const query = async(searchText:string) =>{
       };
       
      return await fetch(url, options)
-        .then(response => {
-          return response.json()
-        })
+        .then(response => response.json())
         .then(response => response?.data)
-        .catch(err => console.error(err));
+        .catch(err => err.message);
 }
