@@ -25,6 +25,19 @@ input{
   font-size: 20px;
 }
 
-.suggestions{
-  padding-top: 10px;
+
+
+ul{
+  text-align: left;
+  list-style: none;
+}
+
+li{
+  padding: 7px;
+  font-size: 18px;
+}
+
+li:hover{
+  background-color: #ccc342;
+  cursor: pointer
 }
