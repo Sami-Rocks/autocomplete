@@ -1,5 +1,7 @@
 
 import { useEffect, useId, useState } from 'react'
+import { findDifference } from './utilities/utils'
+import { query } from './service/searchQuery'
 import './App.css'
 
 function App() {
@@ -8,36 +10,18 @@ function App() {
   const [ loading, setLoading ] = useState<boolean>(false)
   const listID = useId()
 
-  const findDifference = (firstString:string, subString:string) => {
-    const diff = (diffMe:string, diffBy:string) => diffMe.split(diffBy).join('')
-    return diff(firstString, subString)
-  }
-
   const searchQuery = async (arg:string) =>{
     setLoading(true)
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': 'd08252c3f7mshf7f5f2391bc7d10p12be2fjsnc49acdcaecc3',
-        'X-RapidAPI-Host': 'web-search-autocomplete.p.rapidapi.com'
-      }
-    };
-    
-   return await fetch(`https://web-search-autocomplete.p.rapidapi.com/autocomplete?query=${arg}`, options)
-      .then(response => {
-        setLoading(false)
-        return response.json()
-      })
-      .then(response => setSuggestions(response?.data))
-      .catch(err => console.error(err));
+    const data = await query(arg)
+    setSuggestions(data)
+    setLoading(false)
+  }
 
+  useEffect(()=>{
+    if(searchText.length > 0){
+      searchQuery(searchText)
     }
-
-    useEffect(()=>{
-      if(searchText.length > 0){
-        searchQuery(searchText)
-      }
-    },[searchText])
+  },[searchText])
 
     
   return (
@@ -75,7 +59,7 @@ function App() {
         (!!searchText && suggestions?.length > 0) ? 
         <ul>
           { suggestions.map((el:any)=>{
-            return <li key={el.query + listID} ><span className='highlight' >{searchText}</span>  {findDifference(el.query, searchText)}</li>
+            return <li key={el.query + listID} ><span className='highlight' >{searchText}</span>{findDifference(el.query, searchText)}</li>
           }
           ) }
         </ul> : null
