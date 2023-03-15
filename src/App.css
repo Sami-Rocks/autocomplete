@@ -21,7 +21,7 @@ input{
   outline: none;
   padding: 5px;
   margin-left: 10px;
-  min-width: 330px;
+  width: 330px;
   font-size: 20px;
 }
 
@@ -48,4 +48,10 @@ li:hover{
 
 .highlight{
   color: #ccc;
+}
+
+.error-message{
+  margin: 20px auto;
+  max-width: 420px;
+  color: red;
 }
