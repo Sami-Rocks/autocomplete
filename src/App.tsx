@@ -20,9 +20,9 @@ function App() {
     setLoading(false)
   }
 
-  const updateSearchText = debounce((text:string) => {
-    setSearchText(text)
-  }, 2000) // The debounce function will wait for 2 seconds intervals before making call to the API. This will both improve performace and since I am using a free API, i can only make one request per second
+  // const updateSearchText = debounce((text:string) => {
+  //   setSearchText(text)
+  // }, 2000) // The debounce function will wait for 2 seconds intervals before making call to the API. This will both improve performace and since I am using a free API, i can only make one request per second
 
   useEffect(()=>{
     if(searchText.length > 0){
@@ -58,7 +58,8 @@ function App() {
           type="text" 
           name='searchText' 
           id='searchText'
-          onChange={(event)=>updateSearchText(event.target.value)}
+          value={searchText}
+          onChange={(event)=>setSearchText(event.target.value)}
           />
      </div>
 
@@ -67,7 +68,7 @@ function App() {
         (!!searchText && suggestions?.length > 0) ? 
         <ul>
           { suggestions.map((el:any)=>{
-            return <li key={el.query + listID} ><span >{el.query}</span></li> 
+            return <li key={el.query + listID} onClick={()=>setSearchText(el.query)} ><span >{el.query}</span></li> 
           }
           ) }
         </ul> : null
