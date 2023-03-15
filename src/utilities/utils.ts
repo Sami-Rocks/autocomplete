@@ -2,27 +2,15 @@
 
 export const findDifference = (fullString:string, subString:string) => fullString.split(subString).join('')
 
-export function throttle(cb:any, delay = 1200) {
-    let shouldWait = false
-    let waitingArgs:any
-    const timeoutFunc = () => {
-      if (waitingArgs == null) {
-        shouldWait = false
-      } else {
-        cb(...waitingArgs)
-        waitingArgs = null
-        setTimeout(timeoutFunc, delay)
-      }
+
+export const debounce = <F extends ((...args: any) => any)>(func: F, waitFor: number) => {
+    let timeout: number = 0
+
+    const debounced = (...args: any) => {
+        clearTimeout(timeout)
+        setTimeout(() => func(...args), waitFor)
     }
-  
-    return (...args:any) => {
-      if (shouldWait) {
-        waitingArgs = args
-        return
-      }
-  
-      cb(...args)
-      shouldWait = true
-      setTimeout(timeoutFunc, delay)
-    }
-  }
+    
+    return debounced as (...args: Parameters<F>) => ReturnType<F>
+}
+
